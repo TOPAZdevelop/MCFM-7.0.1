@@ -170,11 +170,15 @@ C-- MARKUS: this is the new code with anomalous couplings from Fabrizio and me
        Amp_S_PR=anomhzzamp(i7,i1,i8,i2,1,s3456,s(i7,i1),s(i8,i2),za,zb)  !   anomzzamp(i7,i1,i8,i2,s3456,s(i7,i1),s(i8,i2),za,zb)
       else
        Amp_S_PR=za(i7,i8)*zb(i2,i1)
+       prop1734 = 1d20!   remove t/u channel
+       prop1756 = 1d20
       endif
       if( AnomalCouplDK ) then
        Amp_S_DK=anomhzzamp(i3,i4,i5,i6,1,s3456,s(i3,i4),s(i5,i6),za,zb)  !  anomzzamp(i3,i4,i5,i6,s3456,s(i3,i4),s(i5,i6),za,zb)
       else
        Amp_S_DK=za(i3,i5)*zb(i6,i4)
+       prop1734 = 1d20!   remove t/u channel
+       prop1756 = 1d20
       endif
 
       ZZHamp(jdu1,jdu2,h17,h28,h34,h56)=
