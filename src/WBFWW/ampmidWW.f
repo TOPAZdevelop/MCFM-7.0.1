@@ -11,7 +11,8 @@
       integer i1,i2,i3,i4,i5,i6,i7,i8,
      & p1,p2,p3,p4,p5,p6,p7,p8
       double complex zab2,zba2,amp,game,gamn,sqwmass,rxw,
-     & propw34,propw56,propw28,propw17,
+     & propw34,propw56,propw28,propw17,anomhwwamp,
+     & Amp_S_PR,Amp_S_DK,Amp_T_PR,Amp_T_DK,
      & propz3456,propa3456,proph3456,proph1347
       double precision t3,t4,s34,s56,s17,s28,s137,s147,
      & s258,s268,s456,s345,s356,s346,s3456,s1347,s1567,
@@ -172,10 +173,32 @@ c--- special fix for Madgraph check
       amp = amp + Bbit*propw17**(-1)*propw28**(-1)*propw56**(-1)*
      & s356**(-1)*s147**(-1) * (  - za(p3,p5)*zb(p1,p4)*zba2(p2,p1,p4,
      &    p7)*zba2(p6,p3,p5,p8)*cxw**(-3) )
-      amp = amp + Hbit*propw17**(-1)*propw28**(-1)*propw34**(-1)*
-     & propw56**(-1) * (  - za(p3,p5)*za(p7,p8)*zb(p1,p2)*zb(p4,p6)*
-     &    cxw**(-3)*sqwmass*proph3456**(-1) - za(p3,p7)*za(p5,p8)*zb(p1
-     &    ,p4)*zb(p2,p6)*cxw**(-3)*sqwmass*proph1347**(-1) )
+      
+!    original MCFM code
+!       amp = amp + Hbit*propw17**(-1)*propw28**(-1)*propw34**(-1)*
+!      & propw56**(-1) * (  
+!      &    -za(p3,p5)*za(p7,p8)*zb(p1,p2)*zb(p4,p6)*proph3456**(-1)   ! MARKUS: this is the WW-->H-->WW contribution (s-channel Higgs)
+!      &   - za(p3,p7)*za(p5,p8)*zb(p1,p4)*zb(p2,p6)*proph1347**(-1)   ! MARKUS: this is the WW-->H-->WW contribution (t-channel Higgs)
+!      &                 )*cxw**(-3)*sqwmass
+!       print *, "MARKUS check: set Bbit=0!"
+!       print *, "MARKUS check: old WW-->H-->WW:",amp
+
+
+!     new code with anomalous couplings
+      Amp_S_PR=-anomhwwamp(i7,i1,i8,i2,1,s3456,s(i7,i1),s(i8,i2),za,zb)
+      Amp_S_DK=-anomhwwamp(i3,i4,i5,i6,1,s3456,s(i3,i4),s(i5,i6),za,zb)
+      Amp_T_PR=-anomhwwamp(i7,i1,i3,i4,1,s1347,s(i3,i4),s(i7,i1),za,zb)
+      Amp_T_DK=-anomhwwamp(i8,i2,i5,i6,1,s1347,s(i5,i6),s(i8,i2),za,zb)
+      amp = amp   !*00000 
+     & + Hbit*propw17**(-1)*propw28**(-1)*propw34**(-1)*propw56**(-1)*(  
+     &   - Amp_S_PR*Amp_S_DK*proph3456**(-1)   ! MARKUS: this is the WW-->H-->WW contribution (s-channel Higgs)
+     &   - Amp_T_PR*Amp_T_DK*proph1347**(-1)   ! MARKUS: this is the WW-->H-->WW contribution (t-channel Higgs)
+     &                 )*cxw**(-3)*sqwmass
+!       print *, "MARKUS check: remove *00000 above when checked"
+!       print *, "MARKUS check: new WW-->H-->WW:",amp
+!       pause
+     
+     
       amp = amp + gamn*Bbit*propw17**(-1)*propw28**(-1)*propw34**(-1)*
      & s346**(-1) * (  - za(p1,p5)*za(p7,p8)*zb(p1,p2)*zb(p4,p6)*zba2(
      &    p1,p4,p6,p3)*cxw**(-2) + za(p2,p5)*za(p7,p8)*zb(p1,p2)*zb(p4,
